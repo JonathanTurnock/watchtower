@@ -1,0 +1,11 @@
+services:
+  watchtower:
+    image: jonathanturnock/watchtower:1.0.0
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - watchtower:/var/lib
+
+volumes:
+  watchtower:
