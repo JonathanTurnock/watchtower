@@ -1,0 +1,41 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
+	"files": {
+		"include": ["**/src/**/*.ts", "**/src/**/*.tsx"],
+		"ignore": [
+			"node_modules",
+			"docs",
+			"dist",
+			"build",
+			"packages/api-client/src/index.ts"
+		]
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"style": {
+				"useImportType": "off",
+				"noNonNullAssertion": "off"
+			},
+			"complexity": {
+				"noBannedTypes": "off",
+				"noEmptyTypeParameters": "off"
+			},
+			"correctness": {
+				"noEmptyPattern": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	}
+}

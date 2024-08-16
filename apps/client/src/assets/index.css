@@ -1,0 +1,6 @@
+@font-face {
+    font-family: 'Portentous Distorted';
+    src:
+            local('Portentous Distorted'),
+            url('./Portentous Distorted.otf') format('opentype');
+}

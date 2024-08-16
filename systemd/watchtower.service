@@ -1,0 +1,11 @@
+[Unit]
+Description=Watchtower Service
+
+[Service]
+ExecStart=/usr/local/bin/watchtower
+Environment=WC__DATABASE=/var/lib/watchtower/db.sqlie
+StandardOutput=append:/var/log/watchtower.log
+StandardError=append:/var/log/watchtower.log
+
+[Install]
+WantedBy=multi-user.target

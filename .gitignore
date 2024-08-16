@@ -1,0 +1,6 @@
+node_modules/
+/packages/api-client/dist/
+build
+**/*.sqlite
+.idea
+dist

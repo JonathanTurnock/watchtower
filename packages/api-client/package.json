@@ -1,0 +1,19 @@
+{
+  "name": "@watchtower/api-client",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index",
+  "scripts": {
+    "generate": "orval",
+    "build": "tsc -p tsconfig.json && tsup src/index.ts --format esm,cjs"
+  },
+  "dependencies": {
+    "axios": "^1.7.3",
+    "swr": "^2.2.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "tsup": "^8.2.4",
+    "orval": "^7.0.1"
+  }
+}
