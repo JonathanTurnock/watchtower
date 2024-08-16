@@ -39,9 +39,9 @@
         "@semantic-release/github",
         {
           "assets": [
-            "build/workmate-linux",
-            "build/workmate-macos",
-            "build/workmate-win.exe"
+            "build/watchtower-linux",
+            "build/watchtower-macos",
+            "build/watchtower-win.exe"
           ]
         }
       ]
