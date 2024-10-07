@@ -53,7 +53,7 @@ export const App: FC = () => {
 
 	return (
 		<AppShell
-			header={{ height: 82 }}
+			header={{ height: 62 }}
 			navbar={{
 				width: 300,
 				breakpoint: "md",
@@ -68,21 +68,19 @@ export const App: FC = () => {
 				}
 				withBorder={false}
 			>
-				<Card style={{ borderRadius: 0, height: 82 }}>
+				<Card p={6} pl={"md"} pr={"md"} style={{ borderRadius: 0 }}>
 					<Group h={"100%"} align={"center"} justify={"space-between"}>
-						<Group gap={"sm"}>
-							<Text
-								style={{
-									userSelect: "none",
-									fontSize: "xx-large",
-									fontFamily: "Portentous Distorted",
-								}}
-								variant="gradient"
-								gradient={{ from: "orange", to: "pink" }}
-							>
-								watchtower
-							</Text>
-						</Group>
+						<Text
+							style={{
+								userSelect: "none",
+								fontSize: "xx-large",
+								fontFamily: "Portentous Distorted",
+							}}
+							variant="gradient"
+							gradient={{ from: "orange", to: "pink" }}
+						>
+							watchtower
+						</Text>
 						<Burger
 							opened={opened}
 							onClick={toggle}
