@@ -14,14 +14,14 @@ export class MonitorConfigService {
 	private readonly logger = new Logger(MonitorConfigService.name);
 
 	@InjectRepository(MonitorEntity)
-	monitorEntityRepository: Repository<MonitorEntity>;
+	monitorEntityRepo: Repository<MonitorEntity>;
 
 	@Inject(MonitorTypeService)
 	monitorTypeService: MonitorTypeService;
 
 	async getMonitorConfig(id: number): Promise<Object | undefined> {
 		this.logger.debug(`Getting monitor config for monitor with id ${id}`);
-		const monitor = await this.monitorEntityRepository.findOneBy({ id });
+		const monitor = await this.monitorEntityRepo.findOneBy({ id });
 		if (!monitor) return undefined;
 
 		return monitor.config;
@@ -32,7 +32,7 @@ export class MonitorConfigService {
 		config: Object,
 	): Promise<Object | undefined> {
 		this.logger.debug(`Updating monitor config for monitor with id ${id}`);
-		const monitor = await this.monitorEntityRepository.findOneBy({ id });
+		const monitor = await this.monitorEntityRepo.findOneBy({ id });
 		if (!monitor) return;
 
 		try {
@@ -43,7 +43,7 @@ export class MonitorConfigService {
 		}
 
 		monitor.config = config;
-		const updated = await this.monitorEntityRepository.save(monitor);
+		const updated = await this.monitorEntityRepo.save(monitor);
 		return updated.config;
 	}
 }

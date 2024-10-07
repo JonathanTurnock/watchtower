@@ -71,6 +71,7 @@ export class MonitorController {
 			id,
 			update.name,
 			update.interval,
+			update.integrations,
 		);
 		if (!monitor)
 			throw new NotFoundException(`Monitor with id ${id} was not found`);

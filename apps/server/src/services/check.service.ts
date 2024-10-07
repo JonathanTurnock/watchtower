@@ -6,6 +6,7 @@ import { IsNull, LessThan, Not, Repository } from "typeorm";
 import { MonitorCheckEntity } from "../entities/monitor-check.entity";
 import { MonitorEntity } from "../entities/monitor.entity";
 import { MonitorResult, monitorResultSchema } from "../monitors/monitor";
+import { IntegrationTypeService } from "./integration-type.service";
 import { MonitorTypeService } from "./monitor-type.service";
 
 @Injectable()
@@ -20,6 +21,9 @@ export class CheckService {
 
 	@Inject(MonitorTypeService)
 	private monitorTypeService: MonitorTypeService;
+
+	@Inject(IntegrationTypeService)
+	private integrationTypeService: IntegrationTypeService;
 
 	@Cron(CronExpression.EVERY_HOUR)
 	async purge() {
@@ -101,5 +105,23 @@ export class CheckService {
 		latestRecord.success = result.success;
 		latestRecord.finishedAt = Date.now();
 		await this.monitorCheckRepository.save(latestRecord);
+
+		if (!result.success) {
+			await this.doNotify(monitor, result);
+		}
+	}
+
+	async doNotify(monitor: MonitorEntity, monitorResult: MonitorResult) {
+		this.logger.debug(`Notifying for monitor ${monitor.name}`);
+		for (const integration of monitor.integrations) {
+			this.logger.debug(`Notifying for integration ${integration.name}`);
+			const parsedConfig = this.integrationTypeService.validateConfig(
+				integration.type,
+				integration.config,
+			);
+			await this.integrationTypeService
+				.getIntegrationTypeInstance(integration.type)
+				.notify(parsedConfig, monitor, monitorResult);
+		}
 	}
 }

@@ -4,13 +4,16 @@ import {
 	Flex,
 	Group,
 	Menu,
+	MultiSelect,
 	Stack,
 	Title,
 } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import {
+	IntegrationDto,
 	MonitorDto,
 	MonitorHistoryDto,
+	useIntegrationControllerGetIntegrations,
 	useMonitorControllerGetMonitor,
 	useMonitorHistoryControllerGetMonitorHistory,
 } from "@watchtower/api-client";
@@ -26,7 +29,8 @@ import { ViewportBreakpoint } from "../viewport-breakpoint.ts";
 const _MonitorPage: FC<{
 	monitor: MonitorDto;
 	history: MonitorHistoryDto[];
-}> = ({ monitor, history }) => {
+	integrations: IntegrationDto[];
+}> = ({ monitor, history, integrations }) => {
 	const { width } = useViewportSize();
 	const navigate = useNavigate();
 	const historyItems = history.map((it) => ({
@@ -80,6 +84,13 @@ const _MonitorPage: FC<{
 				</Group>
 			)}
 			<DurationCard history={historyItems} />
+			<MultiSelect
+				readOnly
+				value={monitor.integrations?.map(String)}
+				data={integrations.map((it) => ({ label: it.name, value: `${it.id}` }))}
+				label={"Notifications"}
+				description={"The following will be notified on incident"}
+			/>
 		</Stack>
 	);
 };
@@ -87,7 +98,7 @@ const _MonitorPage: FC<{
 export const MonitorPage: FC<{}> = ({}) => {
 	const { id } = useParams();
 	const monitor = useMonitorControllerGetMonitor(Number(id || 0));
-
+	const integrations = useIntegrationControllerGetIntegrations();
 	const history = useMonitorHistoryControllerGetMonitorHistory(Number(id || 0));
 
 	return (
@@ -96,6 +107,7 @@ export const MonitorPage: FC<{}> = ({}) => {
 				<_MonitorPage
 					monitor={monitor.data.data}
 					history={history.data?.data || []}
+					integrations={integrations.data?.data || []}
 				/>
 			)}
 		</Container>

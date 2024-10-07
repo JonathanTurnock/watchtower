@@ -16,11 +16,8 @@ export class MonitorDto extends MonitorCreateDto {
 	@ApiProperty()
 	interval: number;
 
-	@ApiProperty()
-	retries?: number;
-
-	@ApiProperty()
-	retryInterval?: number;
+	@ApiProperty({ required: false, type: [Number] })
+	integrations?: number[];
 
 	static fromEntity(entity: MonitorEntity): MonitorDto {
 		return {
@@ -28,6 +25,7 @@ export class MonitorDto extends MonitorCreateDto {
 			name: entity.name,
 			type: entity.type,
 			interval: entity.interval,
+			integrations: entity.integrations?.map((i) => i.id) || [],
 		};
 	}
 }
@@ -38,4 +36,7 @@ export class MonitorUpdateDto {
 
 	@ApiProperty({ required: false })
 	interval?: number;
+
+	@ApiProperty({ required: false, type: [Number] })
+	integrations?: number[];
 }

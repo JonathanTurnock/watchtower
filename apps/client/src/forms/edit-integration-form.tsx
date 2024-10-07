@@ -3,8 +3,6 @@ import {
 	Alert,
 	Button,
 	Group,
-	MultiSelect,
-	NumberInput,
 	Stack,
 	Text,
 	TextInput,
@@ -13,7 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import Editor, { Monaco } from "@monaco-editor/react";
-import { monitorTypeControllerValidateSchema } from "@watchtower/api-client";
+import { integrationTypeControllerValidateSchema } from "@watchtower/api-client";
 import { JSONSchema7 } from "json-schema";
 import { last } from "lodash";
 import { FC, useState } from "react";
@@ -23,28 +21,22 @@ import { dracula } from "../monco-themes.ts";
 
 export const configHttpFormSchema = z.object({
 	name: z.string().min(2, { message: "Name should have at least 2 letters" }),
-	interval: z.number().min(60, {
-		message: "MonitorType Interval should be greater than 60 seconds",
-	}),
-	integrations: z.array(z.string()),
 });
-export type EditMonitorFormValues = z.infer<typeof configHttpFormSchema>;
+export type EditIntegrationFormValues = z.infer<typeof configHttpFormSchema>;
 
-export type EditMonitorFormProps = {
+export type EditIntegrationFormProps = {
 	initialConfig: any;
-	initialValues: EditMonitorFormValues;
-	integrations: { label: string; value: string }[];
-	monitorTypeSchema: JSONSchema7;
+	initialValues: EditIntegrationFormValues;
+	integrationTypeSchema: JSONSchema7;
 	onShowDocs: () => void;
-	onSubmit: (values: EditMonitorFormValues, config: any) => void;
+	onSubmit: (values: EditIntegrationFormValues, config: any) => void;
 };
-export const EditMonitorForm: FC<EditMonitorFormProps> = ({
+export const EditIntegrationForm: FC<EditIntegrationFormProps> = ({
 	initialConfig,
 	onSubmit,
 	initialValues,
-	monitorTypeSchema,
+	integrationTypeSchema,
 	onShowDocs,
-	integrations,
 }) => {
 	const colorScheme = useComputedColorScheme();
 	const form = useForm({
@@ -64,9 +56,9 @@ export const EditMonitorForm: FC<EditMonitorFormProps> = ({
 			schemaRequest: "error",
 			schemas: [
 				{
-					uri: monitorTypeSchema.$id || "",
+					uri: integrationTypeSchema.$id || "",
 					fileMatch: ["*"],
-					schema: monitorTypeSchema,
+					schema: integrationTypeSchema,
 				},
 			],
 		});
@@ -77,11 +69,11 @@ export const EditMonitorForm: FC<EditMonitorFormProps> = ({
 
 	const [configError, setConfigError] = useState<any>(null);
 
-	const handleSubmit = async (values: EditMonitorFormValues) => {
+	const handleSubmit = async (values: EditIntegrationFormValues) => {
 		try {
 			const parsedConfig = JSON.parse(config);
-			await monitorTypeControllerValidateSchema(
-				last(monitorTypeSchema.$id?.split("/")) as string,
+			await integrationTypeControllerValidateSchema(
+				last(integrationTypeSchema.$id?.split("/")) as string,
 				parsedConfig,
 			);
 			setConfigError(null);
@@ -101,29 +93,10 @@ export const EditMonitorForm: FC<EditMonitorFormProps> = ({
 							label="Name"
 							placeholder="Name"
 							description={
-								"This is the name of the monitor and will be used to identify it on dashboards."
+								"This is the name of the integration and will be used to identify it on dashboards."
 							}
 							key={form.key("name")}
 							{...form.getInputProps("name")}
-						/>
-						<NumberInput
-							label="Interval"
-							placeholder="Interval"
-							description={
-								"This is how often the monitor will be run in seconds, we recommend every 60 seconds."
-							}
-							key={form.key("interval")}
-							min={60}
-							{...form.getInputProps("interval")}
-						/>
-						<MultiSelect
-							label="Notifications"
-							description={
-								"Enabling integrations will send alerts to the selected integrations."
-							}
-							data={integrations}
-							key={form.key("integrations")}
-							{...form.getInputProps("integrations")}
 						/>
 					</Stack>
 					<Stack gap={4}>
@@ -131,8 +104,9 @@ export const EditMonitorForm: FC<EditMonitorFormProps> = ({
 							<Stack gap={0}>
 								<Title order={3}>Configuration</Title>
 								<Text size={"xs"} c={"dimmed"}>
-									Setup your monitor configuration using the editor below, open
-									the documentation using the Help icon for more information.
+									Setup your integration configuration using the editor below,
+									open the documentation using the Help icon for more
+									information.
 								</Text>
 							</Stack>
 							<ActionIcon variant={"subtle"} onClick={onShowDocs}>

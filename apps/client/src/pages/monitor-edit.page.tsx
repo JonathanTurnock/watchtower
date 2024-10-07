@@ -9,9 +9,11 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+	IntegrationDto,
 	MonitorDto,
 	monitorConfigControllerUpdateMonitorConfig,
 	monitorControllerUpdateMonitor,
+	useIntegrationControllerGetIntegrations,
 	useMonitorConfigControllerGetMonitorConfig,
 	useMonitorControllerGetMonitor,
 	useMonitorTypeControllerGetSchema,
@@ -33,11 +35,19 @@ import { showSuccessNotification } from "../functions/showSuccessNotification.ts
 
 const _MonitorEditPage: FC<{
 	monitor: MonitorDto;
+	integrations: IntegrationDto[];
 	config: any;
 	onShowDocs: () => void;
 	monitorTypeSchema: JSONSchema7;
 	refreshCallback: () => Promise<void>;
-}> = ({ monitor, config, refreshCallback, monitorTypeSchema, onShowDocs }) => {
+}> = ({
+	monitor,
+	integrations,
+	config,
+	refreshCallback,
+	monitorTypeSchema,
+	onShowDocs,
+}) => {
 	const navigate = useNavigate();
 
 	async function handleSubmit(values: EditMonitorFormValues, config: any) {
@@ -46,6 +56,7 @@ const _MonitorEditPage: FC<{
 			await monitorControllerUpdateMonitor(monitor.id, {
 				name: values.name,
 				interval: values.interval,
+				integrations: values.integrations.map(Number),
 			});
 			showSuccessNotification({ message: "Monitor updated successfully" });
 			await refreshCallback();
@@ -75,7 +86,12 @@ const _MonitorEditPage: FC<{
 				initialValues={{
 					name: monitor.name,
 					interval: monitor.interval,
+					integrations: monitor.integrations?.map((it) => it.toString()) || [],
 				}}
+				integrations={integrations.map((it) => ({
+					value: it.id.toString(),
+					label: it.name,
+				}))}
 				initialConfig={config}
 			/>
 		</Stack>
@@ -87,6 +103,8 @@ export const MonitorEditPage: FC<{}> = ({}) => {
 
 	const monitor = useMonitorControllerGetMonitor(Number(id || 0));
 	const config = useMonitorConfigControllerGetMonitorConfig(Number(id || 0));
+	const integrations = useIntegrationControllerGetIntegrations();
+
 	const monitorTypeSchema = useMonitorTypeControllerGetSchema(
 		monitor.data?.data.type || "",
 	);
@@ -111,6 +129,7 @@ export const MonitorEditPage: FC<{}> = ({}) => {
 					<_MonitorEditPage
 						monitor={monitor.data.data}
 						config={config.data?.data || {}} // Expected to be 404 if new monitor without any config saved yet
+						integrations={integrations.data?.data || []}
 						onShowDocs={docsDrawer.open}
 						monitorTypeSchema={
 							monitorTypeSchema.data.data as unknown as JSONSchema7

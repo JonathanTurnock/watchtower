@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+	Column,
+	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
+	ManyToOne,
+	PrimaryGeneratedColumn,
+} from "typeorm";
+import { IntegrationEntity } from "./integration.entity";
 
 @Entity({ name: "monitors" })
 export class MonitorEntity<CONFIG = any> {
@@ -24,6 +33,20 @@ export class MonitorEntity<CONFIG = any> {
 		},
 	})
 	config: CONFIG;
+
+	@ManyToMany(() => IntegrationEntity, { eager: true, cascade: true })
+	@JoinTable({
+		name: "monitor_integrations",
+		joinColumn: {
+			name: "monitor",
+			referencedColumnName: "id",
+		},
+		inverseJoinColumn: {
+			name: "integration",
+			referencedColumnName: "id",
+		},
+	})
+	integrations: IntegrationEntity[];
 
 	@Column({ default: 60 })
 	interval: number;

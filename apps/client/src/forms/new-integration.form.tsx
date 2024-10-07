@@ -3,21 +3,21 @@ import { useForm, zodResolver } from "@mantine/form";
 import { FC } from "react";
 import { z } from "zod";
 
-export const newMonitorFormSchema = z.object({
+export const newIntegrationFormSchema = z.object({
 	name: z.string().min(2, { message: "Name should have at least 2 letters" }),
 	type: z.string(),
 });
 
-export type NewMonitorFormValues = z.infer<typeof newMonitorFormSchema>;
+export type NewIntegrationFormValues = z.infer<typeof newIntegrationFormSchema>;
 
-export const NewMonitorForm: FC<{
-	onSubmit: (values: NewMonitorFormValues) => void;
+export const NewIntegrationForm: FC<{
+	onSubmit: (values: NewIntegrationFormValues) => void;
 	types: { id: string; name: string; description: string }[];
 }> = ({ onSubmit, types }) => {
-	const form = useForm<NewMonitorFormValues>({
+	const form = useForm<NewIntegrationFormValues>({
 		mode: "uncontrolled",
 		initialValues: { name: "", type: "" },
-		validate: zodResolver(newMonitorFormSchema),
+		validate: zodResolver(newIntegrationFormSchema),
 		validateInputOnBlur: true,
 	});
 
@@ -28,7 +28,7 @@ export const NewMonitorForm: FC<{
 					label="Name"
 					placeholder="Name"
 					description={
-						"This is the name of the monitor and will be used to identify it on dashboards."
+						"This is the name of the integration and will be used to identify it on dashboards."
 					}
 					key={form.key("name")}
 					{...form.getInputProps("name")}
@@ -37,7 +37,7 @@ export const NewMonitorForm: FC<{
 					searchable
 					label="Type"
 					placeholder="Select a type"
-					description={"This is the monitor type"}
+					description={"This is the integration type"}
 					data={types.map((it) => ({ label: it.name, value: it.id }))}
 					key={form.key("type")}
 					{...form.getInputProps("type")}

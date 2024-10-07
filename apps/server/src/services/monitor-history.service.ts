@@ -11,7 +11,7 @@ export class MonitorHistoryService {
 	private readonly logger = new Logger(MonitorHistoryService.name);
 
 	@InjectRepository(MonitorEntity)
-	monitorEntityRepository: Repository<MonitorEntity>;
+	monitorRepo: Repository<MonitorEntity>;
 
 	@InjectRepository(MonitorCheckEntity)
 	monitorCheckEntityRepository: Repository<MonitorCheckEntity>;
@@ -20,7 +20,7 @@ export class MonitorHistoryService {
 		id: number,
 	): Promise<MonitorHistoryDto[] | undefined> {
 		this.logger.debug(`Getting monitor history for monitor with id ${id}`);
-		const monitor = await this.monitorEntityRepository.findOneBy({ id });
+		const monitor = await this.monitorRepo.findOneBy({ id });
 		if (!monitor) return undefined;
 
 		this.logger.debug(
